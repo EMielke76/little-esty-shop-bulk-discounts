@@ -24,6 +24,5 @@ class Invoice < ApplicationRecord
 
   def revenue_by_merchant(merchant)
     merchant_invoice_items(merchant).revenue
-    require "pry"; binding.pry
   end
 end

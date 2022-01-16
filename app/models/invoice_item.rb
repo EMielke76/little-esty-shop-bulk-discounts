@@ -1,7 +1,10 @@
 class InvoiceItem < ApplicationRecord
   belongs_to :item
+  has_one :merchant, through: :item
+  has_many :bulk_discounts, through: :merchant
   belongs_to :invoice
   has_many :transactions, through: :invoice
+
 
   validates :quantity, presence: true, numericality: {only_integer: true}
   validates :unit_price, presence: true, numericality: {only_integer: true}

@@ -16,4 +16,20 @@ class InvoiceItem < ApplicationRecord
     InvoiceItem.joins(invoice: :transactions).where(transactions: {result: 0})
     .sum("invoice_items.quantity * invoice_items.unit_price")
   end
+
+  def revenue
+    quantity * unit_price
+  end
+
+  def discount_available
+    bulk_discounts.where("bulk_discounts.threshold <= ?", quantity).order(percent_discount: :desc).first
+  end
+
+  def discounted_revenue
+    if discount_available == nil
+      revenue
+    else
+      revenue - (revenue * discount_available.percentage)
+    end
+  end
 end

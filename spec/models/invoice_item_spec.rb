@@ -22,7 +22,20 @@ RSpec.describe InvoiceItem, type: :model do
   end
 
   describe 'class methods' do
-    describe 'revenue' do
+
+    describe '#revenue' do
+      it 'can calculate total revenue of an invoice_item' do
+        merchant_1 = create(:merchant)
+        bulk_discount_1 = create(:bulk_discount, merchant: merchant_1)
+        item_1 = create(:item, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 10, unit_price: 15000)
+
+        expect(invoice_item_1.revenue).to eq(150000)
+      end
+    end
+
+    describe '::revenue' do
       it "multiplies unit_price and quantity for a collection of invoice_items and sums them only if they are associated with an invoice that has at least 1 successful transaction" do
         invoice_1 = create(:invoice)
         invoice_2 = create(:invoice)
@@ -50,6 +63,66 @@ RSpec.describe InvoiceItem, type: :model do
         # test for multiple invoices with successful transactions
         transaction_3 = create(:transaction, result: 0, invoice: invoice_2)
         expect(invoice_items.revenue).to eq(9000)
+      end
+    end
+
+    describe "#discount_available" do
+      it 'finds a discount' do
+        merchant_1 = create(:merchant)
+        item_1 = create(:item, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 10, unit_price: 15000)
+
+        bulk_discount_1 = create(:bulk_discount, merchant: merchant_1)
+        bulk_discount_2 = create(:bulk_discount, merchant: merchant_1, threshold: 15, percent_discount: 25)
+
+        expect(invoice_item_1.discount_available).to eq(bulk_discount_1)
+      end
+
+      it 'finds the highest applicable discount' do
+        merchant_1 = create(:merchant)
+        item_1 = create(:item, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 10, unit_price: 15000)
+
+        bulk_discount_1 = create(:bulk_discount, merchant: merchant_1)
+        bulk_discount_2 = create(:bulk_discount, merchant: merchant_1, percent_discount: 25)
+
+        expect(invoice_item_1.discount_available).to eq(bulk_discount_2)
+      end
+    end
+
+    describe "#discounted_revenue" do
+      it 'can calucate revenue with a discount applied' do
+        merchant_1 = create(:merchant)
+        bulk_discount_1 = create(:bulk_discount, merchant: merchant_1)
+        item_1 = create(:item, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 10, unit_price: 15000)
+
+
+        expect(invoice_item_1.discounted_revenue).to eq(120000)
+      end
+
+      it 'calculates revenue with the highest discount available applied' do
+        merchant_1 = create(:merchant)
+        bulk_discount_1 = create(:bulk_discount, merchant: merchant_1, percent_discount: 10)
+        bulk_discount_2 = create(:bulk_discount, merchant: merchant_1, percent_discount: 50)
+        item_1 = create(:item, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 10, unit_price: 15000)
+
+        expect(invoice_item_1.discounted_revenue).to eq(75000.0)
+      end
+
+      it 'calcuates still calculates revenue without a discount' do
+        merchant_1 = create(:merchant)
+        bulk_discount_1 = create(:bulk_discount, merchant: merchant_1)
+        item_1 = create(:item, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 5, unit_price: 15000)
+
+        expect(invoice_item_1.discounted_revenue).to eq(75000)
       end
     end
   end

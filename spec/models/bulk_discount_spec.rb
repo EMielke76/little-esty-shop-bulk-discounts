@@ -5,6 +5,7 @@ RSpec.describe BulkDiscount, type: :model do
     it { should belong_to(:merchant) }
     it { should have_many(:items).through(:merchant) }
     it { should have_many(:invoice_items).through(:items) }
+    it { should have_many(:invoices).through(:invoice_items) }
   end
 
   describe 'validations' do
@@ -19,7 +20,7 @@ RSpec.describe BulkDiscount, type: :model do
       discount_1 = create(:bulk_discount)
       discount_2 = create(:bulk_discount, percent_discount: 35)
 
-      expect(discount_1.format_discount).to eq("10%")
+      expect(discount_1.format_discount).to eq("20%")
       expect(discount_2.format_discount).to eq("35%")
     end
   end
@@ -29,7 +30,7 @@ RSpec.describe BulkDiscount, type: :model do
       discount_1 = create(:bulk_discount)
       discount_2 = create(:bulk_discount, percent_discount: 35)
 
-      expect(discount_1.percentage).to eq(0.10)
+      expect(discount_1.percentage).to eq(0.20)
       expect(discount_2.percentage).to eq(0.35)
     end
   end

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe BulkDiscount, type: :model do
   describe 'relationships' do
-    it { should belong_to :merchant }
+    it { should belong_to(:merchant) }
     it { should have_many(:items).through(:merchant) }
     it { should have_many(:invoice_items).through(:items) }
   end
@@ -32,5 +32,5 @@ RSpec.describe BulkDiscount, type: :model do
       expect(discount_1.percentage).to eq(0.10)
       expect(discount_2.percentage).to eq(0.35)
     end
-  end 
+  end
 end

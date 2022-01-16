@@ -50,7 +50,5 @@ RSpec.describe InvoiceItem, type: :model do
         expect(invoice_items.revenue).to eq(9000)
       end
     end
-
-    describe ''
   end
 end

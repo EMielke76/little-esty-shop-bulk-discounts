@@ -24,14 +24,26 @@ RSpec.describe InvoiceItem, type: :model do
   describe 'class methods' do
 
     describe '#revenue' do
-      it 'can calculate total revenue of an invoice_item' do
+      it 'can calculate total revenue of an invoice_item with a successful transaction' do
         merchant_1 = create(:merchant)
         bulk_discount_1 = create(:bulk_discount, merchant: merchant_1)
         item_1 = create(:item, merchant: merchant_1)
         invoice_1 = create(:invoice)
         invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 10, unit_price: 15000)
+        transaction = create(:transaction, invoice: invoice_1, result: 0)
 
         expect(invoice_item_1.revenue).to eq(150000)
+      end
+
+      it 'returns nothting when a transaction was unsuccessful' do
+        merchant_1 = create(:merchant)
+        bulk_discount_1 = create(:bulk_discount, merchant: merchant_1)
+        item_1 = create(:item, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 10, unit_price: 15000)
+        transaction = create(:transaction, invoice: invoice_1, result: 1)
+
+        expect(invoice_item_1.revenue).to eq(0)
       end
     end
 
@@ -99,7 +111,7 @@ RSpec.describe InvoiceItem, type: :model do
         item_1 = create(:item, merchant: merchant_1)
         invoice_1 = create(:invoice)
         invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 10, unit_price: 15000)
-
+        transaction = create(:transaction, invoice: invoice_1, result: 0)
 
         expect(invoice_item_1.discounted_revenue).to eq(120000)
       end
@@ -111,6 +123,7 @@ RSpec.describe InvoiceItem, type: :model do
         item_1 = create(:item, merchant: merchant_1)
         invoice_1 = create(:invoice)
         invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 10, unit_price: 15000)
+        transaction = create(:transaction, invoice: invoice_1, result: 0)
 
         expect(invoice_item_1.discounted_revenue).to eq(75000.0)
       end
@@ -121,7 +134,8 @@ RSpec.describe InvoiceItem, type: :model do
         item_1 = create(:item, merchant: merchant_1)
         invoice_1 = create(:invoice)
         invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 5, unit_price: 15000)
-
+        transaction = create(:transaction, invoice: invoice_1, result: 0)
+        
         expect(invoice_item_1.discounted_revenue).to eq(75000)
       end
     end

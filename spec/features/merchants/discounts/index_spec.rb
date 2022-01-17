@@ -11,7 +11,7 @@ RSpec.describe 'Merchant Discounts index page' do
     visit "/merchants/#{merchant.id}/discounts"
 
     expect(page).to have_content("Bob Barker's Discounts")
-    
+
     within("#discount_#{bd_1.id}") do
       expect(page).to have_content("Percent Discount: 20%")
       expect(page).to have_content("Threshold: 10 items")
@@ -28,25 +28,25 @@ RSpec.describe 'Merchant Discounts index page' do
     end
   end
 
-  xit 'displays a link to each discounts show page' do
+  it 'displays a link to each discounts show page' do
     merchant = create(:merchant, name: "Bob Barker")
     bd_1 = create(:bulk_discount, merchant: merchant)
     bd_2 = create(:bulk_discount, merchant: merchant, threshold: 5, percent_discount: 10)
 
     visit "/merchants/#{merchant.id}/discounts"
 
-    within("discount_#{bd_1.id}") do
+    within("#discount_#{bd_1.id}") do
       expect(page).to have_link("Discount #{bd_1.id}'s Information")
       click_link "Discount #{bd_1.id}'s Information"
-      expect(current_path).to eq("merchants/#{merchant.id}/discounts/#{bd_1.id}")
+      expect(current_path).to eq("/merchants/#{merchant.id}/discounts/#{bd_1.id}")
     end
 
     visit "/merchants/#{merchant.id}/discounts"
 
-    within("discount_#{bd_2.id}") do
+    within("#discount_#{bd_2.id}") do
       expect(page).to have_link("Discount #{bd_2.id}'s Information")
       click_link "Discount #{bd_2.id}'s Information"
-      expect(current_path).to eq("merchants/#{merchant.id}/discounts/#{bd_2.id}")
+      expect(current_path).to eq("/merchants/#{merchant.id}/discounts/#{bd_2.id}")
     end
   end
 end

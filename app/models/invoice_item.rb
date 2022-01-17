@@ -18,7 +18,11 @@ class InvoiceItem < ApplicationRecord
   end
 
   def revenue
-    quantity * unit_price
+    if transactions.where("transactions.result = 0").count >= 1
+      quantity * unit_price
+    else
+      0
+    end
   end
 
   def discount_available
@@ -30,6 +34,12 @@ class InvoiceItem < ApplicationRecord
       revenue
     else
       revenue - (revenue * discount_available.percentage)
+    end
+  end
+
+  def self.merchant_discounted_revenue
+    sum do |invoice_item|
+      invoice_item.discounted_revenue
     end
   end
 end

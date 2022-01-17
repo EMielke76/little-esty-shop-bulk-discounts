@@ -83,5 +83,136 @@ RSpec.describe Invoice, type: :model do
         expect(invoice1.revenue_by_merchant(merchant_2)).to eq(100000)
       end
     end
+
+    describe '#invoice_discounted_revenue' do
+      it 'calculates revenue if no items meet the threshold for a discount' do
+        merchant_1 = create(:merchant)
+        bulk_discount = create(:bulk_discount, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        item_1 = create(:item_with_invoices, merchant: merchant_1, invoices: [invoice_1], invoice_item_quantity: 5, invoice_item_unit_price: 10)
+        item_2 = create(:item_with_invoices, invoices: [invoice_1], invoice_item_quantity: 5, invoice_item_unit_price: 10)
+        transation_1 = create(:transaction, invoice: invoice_1, result: 0)
+
+        expect(invoice_1.revenue).to eq(100)
+        expect(invoice_1.invoice_discounted_revenue).to eq(100)
+      end
+
+      it 'calculates revenue if one item on an invoice qualifies for a discount and multiple are from the same merchant' do
+        merchant_1 = create(:merchant)
+        bulk_discount = create(:bulk_discount, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        item_1 = create(:item_with_invoices, merchant: merchant_1, invoices: [invoice_1], invoice_item_quantity: 10, invoice_item_unit_price: 10)
+        item_2 = create(:item_with_invoices, merchant: merchant_1, invoices: [invoice_1], invoice_item_quantity: 5, invoice_item_unit_price: 10)
+        transation_1 = create(:transaction, invoice: invoice_1, result: 0)
+
+        expect(invoice_1.revenue).to eq(150)
+        expect(invoice_1.invoice_discounted_revenue).to eq(130)
+      end
+
+      it 'calculates revenue if one item from one merchant on an invoice qualifies for a discount' do
+        merchant_1 = create(:merchant)
+        bulk_discount = create(:bulk_discount, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        item_1 = create(:item_with_invoices, merchant: merchant_1, invoices: [invoice_1], invoice_item_quantity: 10, invoice_item_unit_price: 10)
+        item_2 = create(:item_with_invoices, invoices: [invoice_1], invoice_item_quantity: 5, invoice_item_unit_price: 10)
+        transation_1 = create(:transaction, invoice: invoice_1, result: 0)
+
+        expect(invoice_1.revenue).to eq(150)
+        expect(invoice_1.invoice_discounted_revenue).to eq(130)
+      end
+
+      it 'does not factor in another merchants items into a discount' do
+        merchant_1 = create(:merchant)
+        bulk_discount = create(:bulk_discount, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        item_1 = create(:item_with_invoices, merchant: merchant_1, invoices: [invoice_1], invoice_item_quantity: 10, invoice_item_unit_price: 10)
+        item_2 = create(:item_with_invoices, invoices: [invoice_1], invoice_item_quantity: 10, invoice_item_unit_price: 10)
+        transation_1 = create(:transaction, invoice: invoice_1, result: 0)
+
+        expect(invoice_1.revenue).to eq(200)
+        expect(invoice_1.invoice_discounted_revenue).to eq(180)
+      end
+    end
+
+    describe '#discounted_revenue_by_merchant' do
+      it 'calculates revenue if no items meet the threshold for a discount' do
+        merchant_1 = create(:merchant)
+        bulk_discount = create(:bulk_discount, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        item_1 = create(:item_with_invoices, merchant: merchant_1, invoices: [invoice_1], invoice_item_quantity: 5, invoice_item_unit_price: 10)
+        item_2 = create(:item_with_invoices, invoices: [invoice_1], invoice_item_quantity: 5, invoice_item_unit_price: 10)
+        transation_1 = create(:transaction, invoice: invoice_1, result: 0)
+
+        expect(invoice_1.revenue).to eq(100)
+        expect(invoice_1.revenue_by_merchant(merchant_1)).to eq(50)
+        expect(invoice_1.discounted_revenue_by_merchant(merchant_1)).to eq(50)
+      end
+
+      it 'calculates revenue if only one item on an invoice qualifies for a discount' do
+        merchant_1 = create(:merchant)
+        bulk_discount = create(:bulk_discount, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        item_1 = create(:item_with_invoices, merchant: merchant_1, invoices: [invoice_1], invoice_item_quantity: 10, invoice_item_unit_price: 10)
+        item_2 = create(:item_with_invoices, merchant: merchant_1, invoices: [invoice_1], invoice_item_quantity: 5, invoice_item_unit_price: 10)
+        transation_1 = create(:transaction, invoice: invoice_1, result: 0)
+
+        expect(invoice_1.revenue).to eq(150)
+        expect(invoice_1.revenue_by_merchant(merchant_1)).to eq(150)
+        expect(invoice_1.discounted_revenue_by_merchant(merchant_1)).to eq(130)
+      end
+
+      it 'calculates revenue if only one item belongs to a merchant and qualifies for a discount' do
+        merchant_1 = create(:merchant)
+        bulk_discount = create(:bulk_discount, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        item_1 = create(:item_with_invoices, merchant: merchant_1, invoices: [invoice_1], invoice_item_quantity: 10, invoice_item_unit_price: 10)
+        item_2 = create(:item_with_invoices, invoices: [invoice_1], invoice_item_quantity: 5, invoice_item_unit_price: 10)
+        transation_1 = create(:transaction, invoice: invoice_1, result: 0)
+
+        expect(invoice_1.revenue).to eq(150)
+        expect(invoice_1.revenue_by_merchant(merchant_1)).to eq(100)
+        expect(invoice_1.discounted_revenue_by_merchant(merchant_1)).to eq(80)
+      end
+
+      it 'does not factor in another merchants items into a discount' do
+        merchant_1 = create(:merchant)
+        bulk_discount = create(:bulk_discount, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        item_1 = create(:item_with_invoices, merchant: merchant_1, invoices: [invoice_1], invoice_item_quantity: 10, invoice_item_unit_price: 10)
+        item_2 = create(:item_with_invoices, invoices: [invoice_1], invoice_item_quantity: 10, invoice_item_unit_price: 10)
+        transation_1 = create(:transaction, invoice: invoice_1, result: 0)
+
+        expect(invoice_1.revenue).to eq(200)
+        expect(invoice_1.revenue_by_merchant(merchant_1)).to eq(100)
+        expect(invoice_1.discounted_revenue_by_merchant(merchant_1)).to eq(80)
+      end
+
+      it 'calculates revenue with muiltiple items that qualifiy for discounts, giving the highest discount available to each' do
+        merchant_1 = create(:merchant)
+        bulk_discount_1 = create(:bulk_discount, merchant: merchant_1, threshold: 8, percent_discount: 10)
+        bulk_discount_2 = create(:bulk_discount, merchant: merchant_1, percent_discount: 50)
+        invoice_1 = create(:invoice)
+        item_1 = create(:item_with_invoices, invoices: [invoice_1], merchant: merchant_1,  invoice_item_quantity: 8, invoice_item_unit_price: 10)
+        item_2 = create(:item_with_invoices, invoices: [invoice_1], merchant: merchant_1,  invoice_item_quantity: 10, invoice_item_unit_price: 10)
+        transaction = create(:transaction, invoice: invoice_1, result: 0)
+
+        expect(invoice_1.revenue).to eq(180)
+        expect(invoice_1.revenue_by_merchant(merchant_1)).to eq(180)
+        expect(invoice_1.discounted_revenue_by_merchant(merchant_1)).to eq(122)
+      end
+
+      it 'returns zero if invoice has an unsucessful transation' do
+        merchant_1 = create(:merchant)
+        bulk_discount = create(:bulk_discount, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        item_1 = create(:item_with_invoices, merchant: merchant_1, invoices: [invoice_1], invoice_item_quantity: 10, invoice_item_unit_price: 10)
+        item_2 = create(:item_with_invoices, invoices: [invoice_1], invoice_item_quantity: 10, invoice_item_unit_price: 10)
+        transation_1 = create(:transaction, invoice: invoice_1, result: 1)
+
+        expect(invoice_1.revenue).to eq(0)
+        expect(invoice_1.revenue_by_merchant(merchant_1)).to eq(0)
+        expect(invoice_1.discounted_revenue_by_merchant(merchant_1)).to eq(0)
+      end
+    end
   end
 end

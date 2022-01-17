@@ -26,4 +26,14 @@ class Invoice < ApplicationRecord
   def revenue_by_merchant(merchant)
     merchant_invoice_items(merchant).revenue
   end
+
+  def discounted_revenue_by_merchant(merchant)
+    merchant_invoice_items(merchant).merchant_discounted_revenue
+  end
+
+  def invoice_discounted_revenue
+    invoice_items.sum do |invoice_item|
+      invoice_item.discounted_revenue
+    end
+  end
 end

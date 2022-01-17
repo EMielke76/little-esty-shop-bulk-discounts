@@ -19,7 +19,7 @@ RSpec.describe "merchant discount creation" do
     within("#create_discount") do
       click_on "Save"
     end
-    
+
     expect(current_path).to eq("/merchants/#{merchant.id}/discounts/new")
 
     within("#errors") do
@@ -30,7 +30,7 @@ RSpec.describe "merchant discount creation" do
     end
   end
 
-  xit 'displays an error when filled in with the incorrect datatype' do
+  it 'displays an error when filled in with the incorrect datatype' do
     merchant = create(:merchant, name: "Bob Barker")
 
     visit "/merchants/#{merchant.id}/discounts/new"
@@ -41,8 +41,10 @@ RSpec.describe "merchant discount creation" do
       click_on "Save"
     end
 
-    expect(current_path).to eq("/merchants/#{merchant.id}/discounts/new")
-    expect(page).to have_content("Error: Percent Discount must be a number, Threshold must be a number")
+    within("#errors") do
+      expect(page).to have_content("Error: Percent discount is not a number")
+      expect(page).to have_content("Error: Threshold is not a number")
+    end
   end
 
   xit 'displays an error when a number thats too large or too small is entered' do

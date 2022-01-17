@@ -54,9 +54,9 @@ RSpec.describe 'Merchant Discounts index page' do
     merchant = create(:merchant, name: "Bob Barker")
 
     visit "/merchants/#{merchant.id}/discounts"
-
-    expect(page).to have_link "Create a Discount"
+    
+    expect(page).to have_link("Create a Discount")
     click_on "Create a Discount"
-    expect(curent_path).to eq("/merchants/#{merchant.id}/discounts/new")
+    expect(current_path).to eq("/merchants/#{merchant.id}/discounts/new")
   end
 end

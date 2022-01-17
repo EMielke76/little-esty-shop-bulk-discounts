@@ -145,4 +145,15 @@ RSpec.describe 'merchant dashboard' do
       end
     end
   end
+
+  describe 'Bulk Discounts' do
+    it 'displays a link to view all discounts' do
+      merchant = create(:merchant)
+      visit "/merchants/#{merchant.id}/dashboard"
+
+      expect(page).to have_link("Discounts")
+      click_link "Discounts"
+      expect(current_path).to eq("/merchants/#{merchant.id}/discounts")
+    end   
+  end
 end

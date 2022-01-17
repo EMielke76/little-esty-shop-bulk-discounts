@@ -5,6 +5,10 @@ class MerchantDiscountsController < ApplicationController
   end
 
   def show
-    
+
+  end
+
+  def new
+    require "pry"; binding.pry
   end
 end

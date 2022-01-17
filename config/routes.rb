@@ -6,12 +6,13 @@ Rails.application.routes.draw do
   scope '/admin', as: 'admin' do
     resources :merchants, controller: 'admin_merchants'
   end
-  
+
   scope '/admin' do
     resources :invoices, controller: 'admin_invoices'
   end
 
   get 'merchants/:id/invoices', to: 'merchant_invoices#index'
+  get 'merchants/:id/discounts', to: 'merchant_discounts#index'
   get 'merchants/:merchant_id/invoices/:invoice_id', to: 'merchant_invoices#show'
   patch '/merchants/:merchant_id/invoices/:invoice_id/:invoice_item_id', to: 'invoice_items#update'
 

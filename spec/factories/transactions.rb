@@ -21,10 +21,10 @@ FactoryBot.define do
         invoice_item_quantity {4}
         invoice_item_unit_price {15000}
       end
-      after(:create) do |transaction, evaluator|
-        transaction.invoice.update(customer: evaluator.customer)
-        create(:invoice_item, item: evaluator.item, invoice: transaction.invoice, quantity: invoice_item_quantity, unit_price: invoice_item_unit_price)
-      end
+      # after(:create) do |transaction, evaluator|
+      #   transaction.invoice.update(customer: evaluator.customer)
+      #   create(:invoice_item, item: evaluator.item, invoice: transaction.invoice, quantity: invoice_item_quantity, unit_price: invoice_item_unit_price)
+      # end
     end
   end
 end

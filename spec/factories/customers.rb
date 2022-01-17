@@ -9,9 +9,9 @@ FactoryBot.define do
         invoice_count {2}
       end
 
-      after(:create) do |customer, evaluator|
-        create_list(:invoice, evaluator.invoice_count, customer: customer)
-      end
+      # after(:create) do |customer, evaluator|
+      #   create_list(:invoice, evaluator.invoice_count, customer: customer)
+      # end
     end
 
     factory :customer_with_transactions do

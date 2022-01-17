@@ -128,6 +128,18 @@ RSpec.describe InvoiceItem, type: :model do
         expect(invoice_item_1.discounted_revenue).to eq(75000.0)
       end
 
+      it 'calculates revenue with the highest percentage discount available applied if multiple thresholds are met' do
+        merchant_1 = create(:merchant)
+        bulk_discount_1 = create(:bulk_discount, merchant: merchant_1, threshold: 8, percent_discount: 50)
+        bulk_discount_2 = create(:bulk_discount, merchant: merchant_1, percent_discount: 20)
+        item_1 = create(:item, merchant: merchant_1)
+        invoice_1 = create(:invoice)
+        invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 10, unit_price: 15000)
+        transaction = create(:transaction, invoice: invoice_1, result: 0)
+
+        expect(invoice_item_1.discounted_revenue).to eq(75000.0)
+      end
+
       it 'still calculates revenue if no discount applies' do
         merchant_1 = create(:merchant)
         bulk_discount_1 = create(:bulk_discount, merchant: merchant_1)
@@ -135,7 +147,7 @@ RSpec.describe InvoiceItem, type: :model do
         invoice_1 = create(:invoice)
         invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 5, unit_price: 15000)
         transaction = create(:transaction, invoice: invoice_1, result: 0)
-        
+
         expect(invoice_item_1.discounted_revenue).to eq(75000)
       end
     end

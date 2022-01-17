@@ -115,7 +115,7 @@ RSpec.describe InvoiceItem, type: :model do
         expect(invoice_item_1.discounted_revenue).to eq(75000.0)
       end
 
-      it 'calcuates still calculates revenue without a discount' do
+      it 'still calculates revenue if no discount applies' do
         merchant_1 = create(:merchant)
         bulk_discount_1 = create(:bulk_discount, merchant: merchant_1)
         item_1 = create(:item, merchant: merchant_1)

@@ -88,7 +88,7 @@ RSpec.describe 'merchants invoice show page' do
 
 
     visit "/merchants/#{merchant1.id}/invoices/#{invoice1.id}"
-    
+
     within("#financial_reports") do
       expect(page).to have_content("Total Revenue")
       expect(page).to have_content("$28,000.00")
@@ -145,8 +145,26 @@ RSpec.describe 'merchants invoice show page' do
       within("#financial_reports") do
         expect(page).to have_content("Total Revenue")
         expect(page).to have_content("$32,000.00")
-        expect(page).to have_content("Total Revenue With Discounts")
+        expect(page).to have_content("Total Revenue With Discounts (if any)")
         expect(page).to have_content("$28,000.00")
+      end
+    end
+
+    it 'displays the sum total if there are no applicable discounts' do
+      merchant1 = create(:merchant, name: "Bob Barker")
+      invoice1 = create(:invoice)
+      item = create(:item_with_invoices, merchant: merchant1, invoices: [invoice1], invoice_item_unit_price: 150000)
+      item2 = create(:item_with_invoices, merchant: merchant1, invoices: [invoice1], invoice_item_quantity: 10, invoice_item_unit_price: 200000)
+      transaction = create(:transaction, invoice: invoice1, result: 0)
+
+
+      visit "/merchants/#{merchant1.id}/invoices/#{invoice1.id}"
+
+      within("#financial_reports") do
+        expect(page).to have_content("Total Revenue")
+        expect(page).to have_content("$32,000.00")
+        expect(page).to have_content("Total Revenue With Discounts (if any)")
+        expect(page).to have_content("$32,000.00")
       end
     end
 

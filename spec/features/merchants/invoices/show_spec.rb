@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe 'merchants invoice show page' do
 
-
   it 'displays all information related to that invoice' do
     merchant1 = create(:merchant, name: "Bob Barker")
     customer_1 = create(:customer, first_name: "Eric", last_name: "Mielke")
@@ -112,4 +111,15 @@ RSpec.describe 'merchants invoice show page' do
       expect(page).to have_field(:status, with: "shipped")
     end
   end
+
+  describe 'total and discounted revenue' do
+    it 'displays the total revenue the merchant made from the invoice, not including discounts' do
+    end
+
+    it 'displays the total revenue the merchant made from the invoice, including discounts' do
+    end
+
+    it 'displays a link to a discounts show page if applicable' do
+    end
+  end 
 end

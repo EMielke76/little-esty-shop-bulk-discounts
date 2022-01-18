@@ -17,7 +17,7 @@
       </div>
       <% if invoice_item.discount_available != nil %>
         <h4>Discount Applied!</h4>
-        <%= link_to "See Discount #{invoice_item.discount_available.id}'s Info", url: "/merchants/#{@merchant.id}/discounts/#{invoice_item.discount_available.id}" %>
+        <%= link_to "See Discount #{invoice_item.discount_available.id}'s Info", "/merchants/#{@merchant.id}/discounts/#{invoice_item.discount_available.id}" %>
       <%end%>
   </section>
 <%end%>

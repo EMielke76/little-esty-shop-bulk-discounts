@@ -11,8 +11,8 @@ RSpec.describe 'merchant discount edit page' do
     expect(page).to have_content("Edit Bob Barker's Discount ##{bd_1.id}")
     
     within("#update_discount") do
-      expect(page).to have_field("Percent Discount")
-      expect(page).to have_field("Threshold")
+      expect(page).to have_field(:percent_discount)
+      expect(page).to have_field(:threshold)
     end
   end
 

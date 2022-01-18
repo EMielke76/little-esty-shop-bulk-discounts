@@ -39,7 +39,7 @@ class InvoiceItem < ApplicationRecord
 
   def self.merchant_discounted_revenue
     sum do |invoice_item|
-      invoice_item.discounted_revenue
-    end.to_i
+      invoice_item.discounted_revenue.to_i
+    end
   end
 end

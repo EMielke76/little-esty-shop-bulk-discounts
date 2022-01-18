@@ -40,6 +40,6 @@ class InvoiceItem < ApplicationRecord
   def self.merchant_discounted_revenue
     sum do |invoice_item|
       invoice_item.discounted_revenue
-    end
+    end.to_i
   end
 end

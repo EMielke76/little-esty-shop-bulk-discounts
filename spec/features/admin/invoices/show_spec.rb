@@ -156,5 +156,37 @@ RSpec.describe 'Admin_Invoices Show Page' do
         expect(page).to have_content("$768.50")
       end
     end
+
+    it 'displays text denoting if a discount was applied' do
+      merchant_1 = create(:merchant)
+      merchant_2 = create(:merchant)
+      bd_1 =  create(:bulk_discount, merchant: merchant_1)
+      bd_2 =  create(:bulk_discount, merchant: merchant_2, threshold: 5, percent_discount: 10)
+      invoice = create(:invoice)
+      item = create(:item_with_invoices, merchant: merchant_1, invoices: [invoice], invoice_item_unit_price: 3000, invoice_item_quantity: 10)
+      item2 = create(:item_with_invoices, merchant: merchant_1, invoices: [invoice], invoice_item_unit_price: 2500, invoice_item_quantity: 8)
+      item3 = create(:item_with_invoices, merchant: merchant_2, invoices: [invoice], invoice_item_unit_price: 3000, invoice_item_quantity: 8)
+      item4 = create(:item_with_invoices, merchant: merchant_2, invoices: [invoice], invoice_item_unit_price: 2500, invoice_item_quantity: 5)
+      transaction = create(:transaction, invoice: invoice, result: 0)
+
+
+      visit "/admin/invoices/#{invoice.id}"
+
+      within("#invoice_#{invoice.invoice_items.first.id}") do
+        expect(page).to have_content("Discount Applied!")
+      end
+
+      within("#invoice_#{invoice.invoice_items.second.id}") do
+        expect(page).to_not have_content("Discount Applied!")
+      end
+      
+      within("#invoice_#{invoice.invoice_items.third.id}") do
+        expect(page).to have_content("Discount Applied!")
+      end
+
+      within("#invoice_#{invoice.invoice_items.fourth.id}") do
+        expect(page).to have_content("Discount Applied!")
+      end
+    end
   end
 end

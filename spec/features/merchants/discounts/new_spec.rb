@@ -99,6 +99,5 @@ RSpec.describe "merchant discount creation" do
     expect(current_path).to eq("/merchants/#{merchant.id}/discounts")
     expect(page).to have_content("Percent Discount: 10%")
     expect(page).to have_content("Threshold: 10 items")
-    save_and_open_page
   end
 end

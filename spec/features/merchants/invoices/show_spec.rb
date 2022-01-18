@@ -180,13 +180,14 @@ RSpec.describe 'merchants invoice show page' do
       visit "/merchants/#{merchant1.id}/invoices/#{invoice1.id}"
 
       within("#invoice_#{item2.id}") do
+        expect(page).to have_content("Discount Applied!")
         expect(page).to have_link("See Discount #{bd_1.id}'s Info")
       end
 
       within("#invoice_#{item.id}") do
+        expect(page).to_not have_content("Discount Applied!")
         expect(page).to_not have_link("See Discount #{bd_1.id}'s Info")
       end
-      save_and_open_page
     end
   end
 end

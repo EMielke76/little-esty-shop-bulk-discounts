@@ -50,13 +50,23 @@ RSpec.describe 'Merchant Discounts index page' do
     end
   end
 
-  it 'displays a link that connets to a page to create a new discount' do
-    merchant = create(:merchant, name: "Bob Barker")
+  describe 'link to creating a new discount' do
+    it 'displays a link that connets to a page to create a new discount' do
+      merchant = create(:merchant, name: "Bob Barker")
 
-    visit "/merchants/#{merchant.id}/discounts"
-    
-    expect(page).to have_link("Create a Discount")
-    click_on "Create a Discount"
-    expect(current_path).to eq("/merchants/#{merchant.id}/discounts/new")
+      visit "/merchants/#{merchant.id}/discounts"
+
+      expect(page).to have_link("Create a Discount")
+      click_on "Create a Discount"
+      expect(current_path).to eq("/merchants/#{merchant.id}/discounts/new")
+    end
   end
+
+  describe 'link to delete a discount' do
+    it 'displays a link to delete a discount' do
+    end
+
+    it 'deletes a discount' do
+    end
+  end 
 end

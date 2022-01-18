@@ -20,5 +20,11 @@
   </section>
 <%end%>
 
-<h2>Total Potential Revenue</h2>
-<h4><%= money_honey(@invoice.revenue) %></h4>
+<br>
+
+<section id="financial_reports">
+  <h2>Total Revenue</h2>
+  <h4><%= money_honey(@invoice.revenue) %></h4>
+  <h2>Total Revenue With Discounts (if any)</h2>
+  <h4><%= money_honey(@invoice.invoice_discounted_revenue) %></h4>
+</section>

@@ -33,7 +33,7 @@ class Invoice < ApplicationRecord
 
   def invoice_discounted_revenue
     invoice_items.sum do |invoice_item|
-      invoice_item.discounted_revenue
+      invoice_item.discounted_revenue.to_i
     end
   end
 end

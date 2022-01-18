@@ -81,7 +81,7 @@ RSpec.describe 'Admin_Invoices Show Page' do
     end
   end
 
-  it 'calculates the potential revenue of the invoice' do
+  it 'calculates the revenue of the invoice' do
     merchant = create(:merchant)
     invoice = create(:invoice)
     item = create(:item_with_invoices, merchant: merchant, invoices: [invoice], invoice_item_unit_price: 3000, invoice_item_quantity: 8)
@@ -90,7 +90,7 @@ RSpec.describe 'Admin_Invoices Show Page' do
 
     visit "/admin/invoices/#{invoice.id}"
 
-    expect(page).to have_content("Total Potential Revenue")
+    expect(page).to have_content("Total Revenue")
     expect(page).to have_content("$440.00")
   end
 
@@ -113,6 +113,48 @@ RSpec.describe 'Admin_Invoices Show Page' do
       click_on "Update Item Status"
       expect(current_path).to eq("/admin/invoices/#{invoice.id}")
       expect(page).to have_field(:status, with: "shipped")
+    end
+  end
+
+  describe 'discounted revenue display' do
+    it 'displays the total revenue of the invoice without discounts' do
+      merchant = create(:merchant)
+      merchant_2 = create(:merchant)
+      invoice = create(:invoice)
+      item = create(:item_with_invoices, merchant: merchant, invoices: [invoice], invoice_item_unit_price: 3000, invoice_item_quantity: 10)
+      item2 = create(:item_with_invoices, merchant: merchant, invoices: [invoice], invoice_item_unit_price: 2500, invoice_item_quantity: 8)
+      item3 = create(:item_with_invoices, merchant: merchant_2, invoices: [invoice], invoice_item_unit_price: 3000, invoice_item_quantity: 8)
+      item4 = create(:item_with_invoices, merchant: merchant_2, invoices: [invoice], invoice_item_unit_price: 2500, invoice_item_quantity: 5)
+      transaction = create(:transaction, invoice: invoice, result: 0)
+
+      visit "/admin/invoices/#{invoice.id}"
+
+      within("#financial_reports") do
+        expect(page).to have_content("Total Revenue")
+        expect(page).to have_content("$865.00")
+      end
+    end
+
+    it 'displays the total revenue of the invoice including discounts (if any)' do
+      merchant = create(:merchant)
+      merchant_2 = create(:merchant)
+      bd_1 =  create(:bulk_discount, merchant: merchant)
+      bd_2 =  create(:bulk_discount, merchant: merchant_2, threshold: 5, percent_discount: 10)
+      invoice = create(:invoice)
+      item = create(:item_with_invoices, merchant: merchant, invoices: [invoice], invoice_item_unit_price: 3000, invoice_item_quantity: 10)
+      item2 = create(:item_with_invoices, merchant: merchant, invoices: [invoice], invoice_item_unit_price: 2500, invoice_item_quantity: 8)
+      item3 = create(:item_with_invoices, merchant: merchant_2, invoices: [invoice], invoice_item_unit_price: 3000, invoice_item_quantity: 8)
+      item4 = create(:item_with_invoices, merchant: merchant_2, invoices: [invoice], invoice_item_unit_price: 2500, invoice_item_quantity: 5)
+      transaction = create(:transaction, invoice: invoice, result: 0)
+
+      visit "/admin/invoices/#{invoice.id}"
+
+      within("#financial_reports") do
+        expect(page).to have_content("Total Revenue")
+        expect(page).to have_content("$865.00")
+        expect(page).to have_content("Total Revenue With Discounts (if any)")
+        expect(page).to have_content("$768.50")
+      end
     end
   end
 end

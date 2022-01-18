@@ -81,6 +81,24 @@ RSpec.describe "merchant discount creation" do
   end
 
 
-  xit 'redirects back to discount index upon complettion' do
+  it 'redirects back to discount index upon correct completion' do
+    merchant = create(:merchant, name: "Bob Barker")
+
+    visit "/merchants/#{merchant.id}/discounts"
+    expect(page).to_not have_content("Percent Discount: 10%")
+    expect(page).to_not have_content("Threshold: 10 items")
+
+    visit "/merchants/#{merchant.id}/discounts/new"
+
+    within("#create_discount") do
+      fill_in(:percent_discount, with: 10)
+      fill_in(:threshold, with: 10)
+      click_on "Save"
+    end
+
+    expect(current_path).to eq("/merchants/#{merchant.id}/discounts")
+    expect(page).to have_content("Percent Discount: 10%")
+    expect(page).to have_content("Threshold: 10 items")
+    save_and_open_page
   end
 end

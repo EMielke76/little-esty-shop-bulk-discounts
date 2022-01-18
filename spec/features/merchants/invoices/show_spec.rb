@@ -169,6 +169,25 @@ RSpec.describe 'merchants invoice show page' do
     end
 
     it 'displays a link to a discounts show page if applicable' do
+      merchant1 = create(:merchant, name: "Bob Barker")
+      bd_1 = create(:bulk_discount, merchant: merchant1)
+      invoice1 = create(:invoice)
+      item = create(:item_with_invoices, merchant: merchant1, invoices: [invoice1], invoice_item_unit_price: 150000)
+      item2 = create(:item_with_invoices, merchant: merchant1, invoices: [invoice1], invoice_item_quantity: 10, invoice_item_unit_price: 200000)
+      transaction = create(:transaction, invoice: invoice1, result: 0)
+
+
+      visit "/merchants/#{merchant1.id}/invoices/#{invoice1.id}"
+
+      within("#invoice_#{item2.id}") do
+        expect(page).to have_content("Discount Applied!")
+        expect(page).to have_link("See Discount #{bd_1.id}'s Info")
+      end
+
+      within("#invoice_#{item.id}") do
+        expect(page).to_not have_content("Discount Applied!")
+        expect(page).to_not have_link("See Discount #{bd_1.id}'s Info")
+      end
     end
   end
 end

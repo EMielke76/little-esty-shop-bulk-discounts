@@ -15,6 +15,10 @@
         <p>Status: <%= f.select(:status, [:pending, :packaged, :shipped], selected: invoice_item.status)%> <%= f.submit "Update Item Status"%></p>
         <%end%>
       </div>
+      <% if invoice_item.discount_available != nil %>
+        <h4>Discount Applied!</h4>
+        <%= link_to "See Discount #{invoice_item.discount_available.id}'s Info", url: "/merchants/#{@merchant.id}/discounts/#{invoice_item.discount_available.id}" %>
+      <%end%>
   </section>
 <%end%>
 

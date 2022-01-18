@@ -1,4 +1,4 @@
-class MerchantDiscountsController < ApplicationController
+class MerchantBulkDiscountsController < ApplicationController
 
   def index
     @merchant = Merchant.find(params[:id])
@@ -19,10 +19,10 @@ class MerchantDiscountsController < ApplicationController
 
     if discount.save(bulk_discount_params)
       merchant.bulk_discounts.push(discount)
-      redirect_to "/merchants/#{merchant.id}/discounts"
+      redirect_to "/merchants/#{merchant.id}/bulk_discounts"
     else
       flash[:messages] = discount.errors.full_messages
-      redirect_to "/merchants/#{merchant.id}/discounts/new"
+      redirect_to "/merchants/#{merchant.id}/bulk_discounts/new"
     end
   end
 
@@ -35,10 +35,10 @@ class MerchantDiscountsController < ApplicationController
     discount = BulkDiscount.find(params[:discount_id])
     discount.update(bulk_discount_params)
     if discount.valid?
-      redirect_to "/merchants/#{params[:merchant_id]}/discounts/#{discount.id}"
+      redirect_to "/merchants/#{params[:merchant_id]}/bulk_discounts/#{discount.id}"
     else
       flash[:messages] = discount.errors.full_messages
-      redirect_to "/merchants/#{params[:merchant_id]}/discounts/#{discount.id}/edit"
+      redirect_to "/merchants/#{params[:merchant_id]}/bulk_discounts/#{discount.id}/edit"
     end
   end
 
@@ -46,7 +46,7 @@ class MerchantDiscountsController < ApplicationController
   def destroy
     discount = BulkDiscount.find(params[:discount_id])
     discount.destroy
-    redirect_to "/merchants/#{params[:merchant_id]}/discounts"
+    redirect_to "/merchants/#{params[:merchant_id]}/bulk_discounts"
   end
 
   private

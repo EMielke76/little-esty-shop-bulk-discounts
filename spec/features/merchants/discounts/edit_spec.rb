@@ -6,7 +6,7 @@ RSpec.describe 'merchant discount edit page' do
     merchant = create(:merchant, name: "Bob Barker")
     bd_1 = create(:bulk_discount, merchant: merchant)
 
-    visit "/merchants/#{merchant.id}/discounts/#{bd_1.id}/edit"
+    visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}/edit"
 
     expect(page).to have_content("Edit Bob Barker's Discount ##{bd_1.id}")
 
@@ -20,7 +20,7 @@ RSpec.describe 'merchant discount edit page' do
     merchant = create(:merchant, name: "Bob Barker")
     bd_1 = create(:bulk_discount, merchant: merchant)
 
-    visit "/merchants/#{merchant.id}/discounts/#{bd_1.id}/edit"
+    visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}/edit"
 
     within("#update_discount") do
       expect(page).to have_field(:percent_discount, with: 20)
@@ -32,15 +32,15 @@ RSpec.describe 'merchant discount edit page' do
     merchant = create(:merchant, name: "Bob Barker")
     bd_1 = create(:bulk_discount, merchant: merchant)
 
-    visit "/merchants/#{merchant.id}/discounts/#{bd_1.id}/edit"
+    visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}/edit"
 
     within("#update_discount") do
       fill_in(:percent_discount, with: 10)
       fill_in(:threshold, with: 20)
       click_on "Save"
     end
-    expect(current_path).to eq("/merchants/#{merchant.id}/discounts/#{bd_1.id}")
-    visit "/merchants/#{merchant.id}/discounts/#{bd_1.id}"
+    expect(current_path).to eq("/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}")
+    visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}"
 
     expect(page).to have_content("Bob Barker's Discount #{bd_1.id}")
     expect(page).to have_content("Percent Discount: 10%")
@@ -52,14 +52,14 @@ RSpec.describe 'merchant discount edit page' do
       merchant = create(:merchant, name: "Bob Barker")
       bd_1 = create(:bulk_discount, merchant: merchant)
 
-      visit "/merchants/#{merchant.id}/discounts/#{bd_1.id}/edit"
+      visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}/edit"
 
       within("#update_discount") do
         fill_in(:percent_discount, with: -10)
         fill_in(:threshold, with: -10)
         click_on "Save"
       end
-      expect(current_path).to eq("/merchants/#{merchant.id}/discounts/#{bd_1.id}/edit")
+      expect(current_path).to eq("/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}/edit")
 
       within("#errors") do
         expect(page).to have_content("Error: Percent discount must be greater than 1")
@@ -81,14 +81,14 @@ RSpec.describe 'merchant discount edit page' do
       merchant = create(:merchant, name: "Bob Barker")
       bd_1 = create(:bulk_discount, merchant: merchant)
 
-      visit "/merchants/#{merchant.id}/discounts/#{bd_1.id}/edit"
+      visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}/edit"
 
       within("#update_discount") do
         fill_in(:percent_discount, with: "Batman")
         fill_in(:threshold, with: "Robin")
         click_on "Save"
       end
-      expect(current_path).to eq("/merchants/#{merchant.id}/discounts/#{bd_1.id}/edit")
+      expect(current_path).to eq("/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}/edit")
 
       within("#errors") do
         expect(page).to have_content("Error: Percent discount is not a number")

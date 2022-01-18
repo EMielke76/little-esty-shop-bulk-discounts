@@ -206,7 +206,7 @@ RSpec.describe 'merchants invoice show page' do
         expect(page).to have_link("See Discount #{bd_1.id}'s Info")
         click_on "See Discount #{bd_1.id}'s Info"
       end
-      expect(current_path).to eq("/merchants/#{merchant1.id}/discounts/#{bd_1.id}")
+      expect(current_path).to eq("/merchants/#{merchant1.id}/bulk_discounts/#{bd_1.id}")
     end
   end
 end

@@ -6,7 +6,7 @@ RSpec.describe 'merchant bulk discount show page' do
     merchant = create(:merchant, name: "Bob Barker")
     bd_1 = create(:bulk_discount, merchant: merchant)
 
-    visit "/merchants/#{merchant.id}/discounts/#{bd_1.id}"
+    visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}"
 
     expect(page).to have_content("Bob Barker's Discount #{bd_1.id}")
     expect(page).to have_content("Percent Discount: 20%")
@@ -18,7 +18,7 @@ RSpec.describe 'merchant bulk discount show page' do
       merchant = create(:merchant, name: "Bob Barker")
       bd_1 = create(:bulk_discount, merchant: merchant)
 
-      visit "/merchants/#{merchant.id}/discounts/#{bd_1.id}"
+      visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}"
 
       expect(page).to have_content("Edit Discount #{bd_1.id}")
     end
@@ -27,11 +27,11 @@ RSpec.describe 'merchant bulk discount show page' do
       merchant = create(:merchant, name: "Bob Barker")
       bd_1 = create(:bulk_discount, merchant: merchant)
 
-      visit "/merchants/#{merchant.id}/discounts/#{bd_1.id}"
+      visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}"
 
       expect(page).to have_content("Edit Discount #{bd_1.id}")
       click_on("Edit Discount #{bd_1.id}")
-      expect(current_path).to eq("/merchants/#{merchant.id}/discounts/#{bd_1.id}/edit")
+      expect(current_path).to eq("/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}/edit")
     end
   end
 end

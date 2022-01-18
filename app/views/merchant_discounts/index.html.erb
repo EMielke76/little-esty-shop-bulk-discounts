@@ -5,7 +5,11 @@
     <h3>Percent Discount: <%= discount.format_discount %></h3>
     <p>Threshold: <%= discount.threshold%> items</p>
     <%= link_to "Discount #{discount.id}'s Information", "/merchants/#{@merchant.id}/discounts/#{discount.id}" %>
+    <%= link_to "Delete #{discount.id}", "/merchants/#{@merchant.id}/discounts/#{discount.id}", method: :delete %>
   </section>
 <%end%>
 <br>
-<%= link_to "Create a Discount", "/merchants/#{@merchant.id}/discounts/new" %>
+
+<section id="links_to_elsewhere">
+  <%= link_to "Create a Discount", "/merchants/#{@merchant.id}/discounts/new" %>
+</section>

@@ -7,3 +7,5 @@
     <%= link_to "Discount #{discount.id}'s Information", "/merchants/#{@merchant.id}/discounts/#{discount.id}" %>
   </section>
 <%end%>
+<br>
+<%= link_to "Create a Discount", "/merchants/#{@merchant.id}/discounts/new" %>

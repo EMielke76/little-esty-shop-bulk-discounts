@@ -47,7 +47,7 @@ RSpec.describe "merchant discount creation" do
     end
   end
 
-  xit 'displays an error when a number thats too large or too small is entered' do
+  it 'displays an error when a number thats too large or too small is entered' do
     merchant = create(:merchant, name: "Bob Barker")
 
     visit "/merchants/#{merchant.id}/discounts/new"
@@ -59,7 +59,25 @@ RSpec.describe "merchant discount creation" do
     end
 
     expect(current_path).to eq("/merchants/#{merchant.id}/discounts/new")
-    expect(page).to have_content("Error: Percent Discount must under 100, Threshold must over 1")
+
+    within("#errors") do
+      expect(page).to have_content("Error: Percent discount must be less than 100")
+      expect(page).to have_content("Error: Threshold must be greater than 1")
+    end
+
+    visit "/merchants/#{merchant.id}/discounts/new"
+
+    within("#create_discount") do
+      fill_in(:percent_discount, with: -1)
+      fill_in(:threshold, with: 5)
+      click_on "Save"
+    end
+
+    expect(current_path).to eq("/merchants/#{merchant.id}/discounts/new")
+
+    within("#errors") do
+      expect(page).to have_content("Error: Percent discount must be greater than 1")
+    end
   end
 
 

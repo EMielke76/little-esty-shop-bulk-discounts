@@ -88,9 +88,11 @@ RSpec.describe 'merchants invoice show page' do
 
 
     visit "/merchants/#{merchant1.id}/invoices/#{invoice1.id}"
-
-    expect(page).to have_content("Total Revenue")
-    expect(page).to have_content("$28,000.00")
+    
+    within("#financial_reports") do
+      expect(page).to have_content("Total Revenue")
+      expect(page).to have_content("$28,000.00")
+    end
   end
 
   it 'displays an invoices status as a select form' do
@@ -117,14 +119,16 @@ RSpec.describe 'merchants invoice show page' do
       merchant1 = create(:merchant, name: "Bob Barker")
       invoice1 = create(:invoice)
       item = create(:item_with_invoices, name: 'Toy', merchant: merchant1, invoices: [invoice1], invoice_item_unit_price: 150000)
-      item2 = create(:item_with_invoices, name: 'Car', merchant: merchant1, invoices: [invoice1], invoice_item_unit_price: 200000)
+      item2 = create(:item_with_invoices, merchant: merchant1, invoices: [invoice1], invoice_item_quantity: 10, invoice_item_unit_price: 200000)
       transaction = create(:transaction, invoice: invoice1, result: 0)
 
 
       visit "/merchants/#{merchant1.id}/invoices/#{invoice1.id}"
 
-      expect(page).to have_content("Total Revenue")
-      expect(page).to have_content("$28,000.00")
+      within("#financial_reports") do
+        expect(page).to have_content("Total Revenue")
+        expect(page).to have_content("$32,000.00")
+      end
     end
 
     it 'displays the total revenue the merchant made from the invoice, including discounts' do
@@ -138,10 +142,12 @@ RSpec.describe 'merchants invoice show page' do
 
       visit "/merchants/#{merchant1.id}/invoices/#{invoice1.id}"
 
-      expect(page).to have_content("Total Revenue")
-      expect(page).to have_content("$28,000.00")
-      expect(page).to have_content("Total Revenue With Discounts")
-      expect(page).to have_content("$16,000.00")
+      within("#financial_reports") do
+        expect(page).to have_content("Total Revenue")
+        expect(page).to have_content("$32,000.00")
+        expect(page).to have_content("Total Revenue With Discounts")
+        expect(page).to have_content("$28,000.00")
+      end
     end
 
     it 'displays a link to a discounts show page if applicable' do

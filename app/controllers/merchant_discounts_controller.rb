@@ -17,7 +17,7 @@ class MerchantDiscountsController < ApplicationController
     discount = BulkDiscount.new(bulk_discount_params)
 
     if discount.save(bulk_discount_params)
-      merchant.bulk_discounts.create(discount)
+      merchant.bulk_discounts.push(discount)
       redirect_to "/merchants/#{merchant.id}/discounts"
     else
       flash[:messages] = discount.errors.full_messages

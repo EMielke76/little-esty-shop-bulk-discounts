@@ -119,7 +119,7 @@ RSpec.describe 'Admin_Invoices Show Page' do
   describe 'discounted revenue display' do
     it 'displays the total revenue of the invoice without discounts' do
       merchant = create(:merchant)
-      merhcant_2 = create(:merchant)
+      merchant_2 = create(:merchant)
       invoice = create(:invoice)
       item = create(:item_with_invoices, merchant: merchant, invoices: [invoice], invoice_item_unit_price: 3000, invoice_item_quantity: 10)
       item2 = create(:item_with_invoices, merchant: merchant, invoices: [invoice], invoice_item_unit_price: 2500, invoice_item_quantity: 8)
@@ -137,7 +137,7 @@ RSpec.describe 'Admin_Invoices Show Page' do
 
     it 'displays the total revenue of the invoice including discounts (if any)' do
       merchant = create(:merchant)
-      merhcant_2 = create(:merchant)
+      merchant_2 = create(:merchant)
       bd_1 =  create(:bulk_discount, merchant: merchant)
       bd_2 =  create(:bulk_discount, merchant: merchant_2, threshold: 5, percent_discount: 10)
       invoice = create(:invoice)
@@ -153,7 +153,7 @@ RSpec.describe 'Admin_Invoices Show Page' do
         expect(page).to have_content("Total Revenue")
         expect(page).to have_content("$865.00")
         expect(page).to have_content("Total Revenue With Discounts (if any)")
-        expect(page).to have_content("$512.50")
+        expect(page).to have_content("$768.50")
       end
     end
   end

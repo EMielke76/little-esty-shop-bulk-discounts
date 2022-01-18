@@ -13,16 +13,19 @@ RSpec.describe 'Merchant Discounts index page' do
     expect(page).to have_content("Bob Barker's Discounts")
 
     within("#discount_#{bd_1.id}") do
+      expect(page).to have_content("Discount ##{bd_1.id}")
       expect(page).to have_content("Percent Discount: 20%")
       expect(page).to have_content("Threshold: 10 items")
     end
 
     within("#discount_#{bd_2.id}") do
+      expect(page).to have_content("Discount ##{bd_2.id}")
       expect(page).to have_content("Percent Discount: 10%")
       expect(page).to have_content("Threshold: 5 items")
     end
 
     within("#discount_#{bd_3.id}") do
+      expect(page).to have_content("Discount ##{bd_3.id}")
       expect(page).to have_content("Percent Discount: 25%")
       expect(page).to have_content("Threshold: 15 items")
     end
@@ -99,6 +102,7 @@ RSpec.describe 'Merchant Discounts index page' do
       expect(page).to_not have_content("Threshold: 10 items")
 
       within("#discount_#{discount_1.id}") do
+        expect(page).to have_content("Discount ##{discount_1.id}")
         expect(page).to have_content("Percent Discount: 15%")
         expect(page).to have_content("Threshold: 8 items")
       end

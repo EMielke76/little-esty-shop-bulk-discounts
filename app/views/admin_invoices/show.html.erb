@@ -17,10 +17,12 @@
       <p>Status: <%= f.select(:status, [:pending, :packaged, :shipped], selected: invoice_item.status)%> <%= f.submit "Update Item Status"%></p>
       <%end%>
     </section>
+    <% if invoice_item.discount_available != nil %>
+      <h4>Discount Applied!</h4>
+    <%end%>
   </section>
 <%end%>
 
-<br>
 
 <section id="financial_reports">
   <h2>Total Revenue</h2>

@@ -1,3 +1,5 @@
 <h1><%=@merchant.name%>'s Discount <%=@discount.id%></h1>
 <h3>Percent Discount: <%=@discount.format_discount%></h3>
 <h3>Threshold: <%=@discount.threshold%> items</h3>
+<br>
+<%= link_to "Edit Discount #{@discount.id}", "/merchants/#{@merchant.id}/discounts/#{@discount.id}/edit" %>

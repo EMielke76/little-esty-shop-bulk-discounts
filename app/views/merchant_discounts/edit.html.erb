@@ -1,0 +1,19 @@
+<h1>Edit <%=@merchant.name%>'s Discount #<%=@discount.id%></h1>
+<br>
+<%if flash[:messages] %>
+<section id="errors">
+  <% flash[:messages].each do |message| %>
+    <h3>Error: <%= message %></h3>
+  <%end%>
+</section>
+<%end%>
+<br>
+<section id="update_discount">
+  <%= form_with url: "/merchants/#{@merchant.id}/discounts/#{@discount.id}", method: :patch, local: true do |form| %>
+  <%= form.label "Percent Discount" %>
+  <%= form.number_field :percent_discount, :value => @discount.percent_discount %>
+  <%= form.label "Threshold" %>
+  <%= form.number_field :threshold, :value => @discount.threshold %>
+  <%= form.submit%>
+<%end%>
+</section>

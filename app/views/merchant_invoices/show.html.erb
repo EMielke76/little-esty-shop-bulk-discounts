@@ -21,6 +21,6 @@
 <section id="financial_reports">
   <h2>Total Revenue</h2>
   <h4><%= money_honey(@invoice.revenue_by_merchant(@merchant)) %></h4>
-  <h2>Total Revenue With Discounts</h2>
+  <h2>Total Revenue With Discounts (if any)</h2>
   <h4><%= money_honey(@invoice.discounted_revenue_by_merchant(@merchant)) %></h4>
 </section>

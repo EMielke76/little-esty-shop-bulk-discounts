@@ -1,0 +1,7 @@
+<%= form_with url: url, method: method, local: true do |form|%>
+<%= form.label :percent_discount, "Discount Percentage"%>
+<%= form.number_field :percent_discount %>
+<%= form.label :threshold, "Threshold" %>
+<%= form.number_field :threshold %>
+<%= form.submit %>
+<%end%>

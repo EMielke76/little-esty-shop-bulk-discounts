@@ -9,7 +9,7 @@ RSpec.describe 'merchant discount edit page' do
     visit edit_merchant_bulk_discount_path(merchant, bd_1)
 
     expect(page).to have_content("Edit Bob Barker's Discount ##{bd_1.id}")
-
+    
     within("#update_discount") do
       expect(page).to have_field(:percent_discount)
       expect(page).to have_field(:threshold)

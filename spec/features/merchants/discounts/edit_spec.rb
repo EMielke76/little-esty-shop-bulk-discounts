@@ -6,10 +6,10 @@ RSpec.describe 'merchant discount edit page' do
     merchant = create(:merchant, name: "Bob Barker")
     bd_1 = create(:bulk_discount, merchant: merchant)
 
-    visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}/edit"
+    visit edit_merchant_bulk_discount_path(merchant, bd_1)
 
     expect(page).to have_content("Edit Bob Barker's Discount ##{bd_1.id}")
-
+    
     within("#update_discount") do
       expect(page).to have_field(:percent_discount)
       expect(page).to have_field(:threshold)
@@ -20,7 +20,7 @@ RSpec.describe 'merchant discount edit page' do
     merchant = create(:merchant, name: "Bob Barker")
     bd_1 = create(:bulk_discount, merchant: merchant)
 
-    visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}/edit"
+    visit edit_merchant_bulk_discount_path(merchant, bd_1)
 
     within("#update_discount") do
       expect(page).to have_field(:percent_discount, with: 20)
@@ -32,7 +32,7 @@ RSpec.describe 'merchant discount edit page' do
     merchant = create(:merchant, name: "Bob Barker")
     bd_1 = create(:bulk_discount, merchant: merchant)
 
-    visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}/edit"
+    visit edit_merchant_bulk_discount_path(merchant, bd_1)
 
     within("#update_discount") do
       fill_in(:percent_discount, with: 10)
@@ -52,7 +52,7 @@ RSpec.describe 'merchant discount edit page' do
       merchant = create(:merchant, name: "Bob Barker")
       bd_1 = create(:bulk_discount, merchant: merchant)
 
-      visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}/edit"
+      visit edit_merchant_bulk_discount_path(merchant, bd_1)
 
       within("#update_discount") do
         fill_in(:percent_discount, with: -10)
@@ -81,7 +81,7 @@ RSpec.describe 'merchant discount edit page' do
       merchant = create(:merchant, name: "Bob Barker")
       bd_1 = create(:bulk_discount, merchant: merchant)
 
-      visit "/merchants/#{merchant.id}/bulk_discounts/#{bd_1.id}/edit"
+      visit edit_merchant_bulk_discount_path(merchant, bd_1)
 
       within("#update_discount") do
         fill_in(:percent_discount, with: "Batman")
